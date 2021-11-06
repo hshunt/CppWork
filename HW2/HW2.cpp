@@ -11,7 +11,7 @@ struct Warrior{
     bool status = true;
 };
 
-void createWarrior(string warriorline, vector<Warrior> &warriors);
+void createWarrior(ifstream warriorline, vector<Warrior> &warriors);
 void battle(string warriorline, vector<Warrior> warriors);
 void battleOutcome(Warrior &warrior1, Warrior &warrior2);
 void status(string warrior, vector<Warrior> warriors);
@@ -36,15 +36,27 @@ int main(){
     warriordoc.close();
 }
 
-void createWarrior(string warriorline, vector<Warrior> &warriors){
-    size_t found = warriorline.find("Warrior");
-    while (found != string::npos){
-        Warrior aWarrior;
-        aWarrior.name = warriorline[1];
-        aWarrior.strength = warriorline[2];
+void createWarrior(ifstream warriorline, vector<Warrior> &warriors){
+    vector<string> attributes;
+    string attribute;
+    string name;
+    Warrior aWarrior;
+    int power = 0;
+
+    warriorline >> name;
+    while (name == "Warrior"){
+        warriorline >> attribute;
+        attributes.push_back(attribute);
+
+        if (isdigit(attribute[0]) == true){
+            power = attribute; 
+        }
+    }
+
+        aWarrior.name = attributes[0];
+        aWarrior.strength = power;
         warriors.push_back(aWarrior);
     }
-}
 
 void battle(string warriorline, vector<Warrior> warriors){
     size_t found = warriorline.find("Battle");
