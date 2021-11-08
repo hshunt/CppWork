@@ -12,7 +12,7 @@ struct Warrior{
     bool status = true;
 };
 
-void createWarrior(ifstream warriorline, vector<Warrior> &warriors);
+void createWarrior(string warriorline, vector<Warrior> &warriors);
 void battle(string warriorline, vector<Warrior> warriors);
 void battleOutcome(Warrior &warrior1, Warrior &warrior2);
 void status(string warrior, vector<Warrior> warriors);
@@ -25,6 +25,8 @@ int main(){
         cerr << "The file didn't open\n";
         exit(1);
     }
+
+    // run(warriordoc)
 
     vector<Warrior> warriors;
     string warriorline;
@@ -42,7 +44,7 @@ void createWarrior(string warriorline, vector<Warrior> &warriors){
     warriorstream.str(warriorline);
     string type;
     string name;
-    Warrior aWarrior;
+    Warrior warrior;
     int strength = 0;
 
     warriorstream >>  type;
@@ -50,14 +52,10 @@ void createWarrior(string warriorline, vector<Warrior> &warriors){
         warriorstream >> name;
         warriorstream >> strength;
         warriorstream >> strength;
-
-        // if (isdigit(attribute[0]) == true){
-        //     power = attribute; 
-        // }
-    }
-        aWarrior.name = name;
-        aWarrior.strength = strength;
-        warriors.push_back(aWarrior);
+        warrior.name = name;
+        warrior.strength = strength;
+        warriors.push_back(warrior);
+    }    
     }
 
 void battle(string warriorline, vector<Warrior> warriors){
