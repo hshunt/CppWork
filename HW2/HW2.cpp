@@ -3,6 +3,7 @@
 #include <vector>
 #include <istream>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 struct Warrior{
@@ -36,25 +37,26 @@ int main(){
     warriordoc.close();
 }
 
-void createWarrior(ifstream warriorline, vector<Warrior> &warriors){
-    vector<string> attributes;
-    string attribute;
+void createWarrior(string warriorline, vector<Warrior> &warriors){
+    stringstream warriorstream;
+    warriorstream.str(warriorline);
+    string type;
     string name;
     Warrior aWarrior;
-    int power = 0;
+    int strength = 0;
 
-    warriorline >> name;
-    while (name == "Warrior"){
-        warriorline >> attribute;
-        attributes.push_back(attribute);
+    warriorstream >>  type;
+    if (type == "Warrior"){
+        warriorstream >> name;
+        warriorstream >> strength;
+        warriorstream >> strength;
 
-        if (isdigit(attribute[0]) == true){
-            power = attribute; 
-        }
+        // if (isdigit(attribute[0]) == true){
+        //     power = attribute; 
+        // }
     }
-
-        aWarrior.name = attributes[0];
-        aWarrior.strength = power;
+        aWarrior.name = name;
+        aWarrior.strength = strength;
         warriors.push_back(aWarrior);
     }
 
