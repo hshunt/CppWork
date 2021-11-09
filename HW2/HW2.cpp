@@ -81,16 +81,16 @@ void battle( int challenger, int defender, vector<Warrior>& warriors){
             warriors[defender].strength = 0;
         }
         else if (warriors[challenger].strength == warriors[defender].strength){
-        warriors[challenger].status = false;
-        warriors[challenger].strength = 0;
+            warriors[challenger].status = false;
+            warriors[challenger].strength = 0;
             warriors[defender].status = false;
             warriors[defender].strength = 0;
         }
         else {  
-        warriors[challenger].status = false;
-        warriors[challenger].strength = 0;
+            warriors[challenger].status = false;
+            warriors[challenger].strength = 0;
         }
-        changeStatus(warriors[challenger], warriors[defender], warriors);
+        // changeStatus(warriors[challenger], warriors[defender], warriors); // this does nothing
         battleOutcome(warriors[challenger], warriors[defender]);
     }
 
@@ -107,19 +107,19 @@ void battle( int challenger, int defender, vector<Warrior>& warriors){
     }
 }
 
-void changeStatus(const Warrior& challenger, const Warrior& defender, vector<Warrior>& warriors){
-    for (Warrior warrior : warriors){
-        if (warrior.name == challenger.name){
-            warrior.status = challenger.status;
-            warrior.strength = challenger.strength;
-        }
-        else if (warrior.name == defender.name){
-            warrior.status = defender.status;
-            warrior.strength = defender.strength;
-        }
+// void changeStatus(const Warrior& challenger, const Warrior& defender, vector<Warrior>& warriors){
+//     for (Warrior warrior : warriors){
+//         if (warrior.name == challenger.name){
+//             warrior.status = challenger.status;
+//             warrior.strength = challenger.strength;
+//         }
+//         else if (warrior.name == defender.name){
+//             warrior.status = defender.status;
+//             warrior.strength = defender.strength;
+//         }
 
-    }
-}
+//     }
+// }
 
 void battleOutcome(Warrior& challenger, Warrior& defender){
     if (challenger.status == false && defender.status == false){
