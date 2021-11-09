@@ -16,7 +16,6 @@ void run(ifstream& warriordoc, vector<Warrior>& warriors);
 void createWarrior(const string& name, int strength, vector<Warrior>& warriors);
 void status(const vector<Warrior>& warriors);
 void battle( int challenger,  int defender, vector<Warrior>& warriors);
-void changeStatus(const Warrior& challenger, const Warrior& defender, vector<Warrior>& warriors);
 void battleOutcome(Warrior& challenger, Warrior& defender);
 void selectWarriors(const string& challenger, const string& defender, int& offense, int& defense, vector<Warrior>& warriors);
 
@@ -75,19 +74,17 @@ void createWarrior(const string& name, int strength, vector<Warrior>& warriors){
 void battle( int challenger, int defender, vector<Warrior>& warriors){
 
     cout << warriors[challenger].name << " battles " << warriors[defender].name << "\n";
-    if (warriors[challenger].status == true && warriors[defender].status == true){
+    if (warriors[challenger].strength > 0 && warriors[defender].strength > 0){
         if (warriors[challenger].strength > warriors[defender].strength){
-            warriors[defender].status = false;
+             warriors[challenger].strength -= warriors[defender].strength;
             warriors[defender].strength = 0;
         }
         else if (warriors[challenger].strength == warriors[defender].strength){
-            warriors[challenger].status = false;
             warriors[challenger].strength = 0;
-            warriors[defender].status = false;
             warriors[defender].strength = 0;
         }
-        else {  
-            warriors[challenger].status = false;
+        else {
+            warriors[defender].strength -= warriors[challenger].strength;  
             warriors[challenger].strength = 0;
         }
         // changeStatus(warriors[challenger], warriors[defender], warriors); // this does nothing
@@ -95,10 +92,10 @@ void battle( int challenger, int defender, vector<Warrior>& warriors){
     }
 
     else{
-        if (warriors[challenger].status != true && warriors[defender].status != true){
+        if (warriors[challenger].strength == 0 && warriors[defender].strength == 0){
             cout << "oh, NO! They're both dead! Yuck!" << "\n";
         }
-        else if (warriors[challenger].status != true){
+        else if (warriors[challenger].strength == 0){
             cout << "He's dead, " << warriors[defender].name << "\n";
         }
         else{
@@ -122,12 +119,12 @@ void battle( int challenger, int defender, vector<Warrior>& warriors){
 // }
 
 void battleOutcome(Warrior& challenger, Warrior& defender){
-    if (challenger.status == false && defender.status == false){
+    if (challenger.strength == 0 && defender.strength == 0){
         cout << "Mutual Annihilation: " << challenger.name
             << " and " << defender.name << 
             " die at each other's hands\n";
     }
-    else if (challenger.status == false){
+    else if (challenger.strength == 0){
         cout << defender.name << " defeats " << challenger.name << "\n";
     }
     else {
@@ -144,21 +141,6 @@ void status(const vector<Warrior>& warriors){
         << "\n";
     }
 }
-
-// void selectWarriors(const string& challenger, const string& defender, Warrior& offense, Warrior& defense, vector<Warrior>& warriors){
-//     for (Warrior warrior : warriors){
-//         if (warrior.name == challenger){
-//             offense = warrior;
-//         }
-//         else if (warrior.name == defender){
-//             defense = warrior;
-//         }
-//         // else{
-//         //     cerr << "selectWarriors: could not find the warriors" << endl;
-//         //     exit(1);
-//         // }
-//     }
-// }
 
 void selectWarriors(const string& challenger, const string& defender, int& offense, int& defense, vector<Warrior>& warriors){
     for (int i = 0; i <= warriors.size()-1; i++){
