@@ -7,6 +7,8 @@ using namespace std;
 
 class Warrior {
     public:
+        string name;
+
         Warrior(string name, string weaponname, int strength);
 
     string getName (){
@@ -30,7 +32,6 @@ class Warrior {
     }
 
     private:
-        string name;
         string weaponname;
         int strength;
         class Weapon{
@@ -41,10 +42,11 @@ class Warrior {
         }
 };
 
-void createWarrior(vector<Warrior>&, Warrior warrior);
-Warrior selectWarrior(vector<Warrior>, string name);
-void battle(Warrior offense, Warrior defense);
 void run(stringstream warriordoc, vector<Warrior>& warriors);
+void createWarrior(vector<Warrior>&, Warrior warrior);
+// Warrior selectWarrior(vector<Warrior>, string name);
+int selectWarrior(const vector<Warrior>&, const string& name);
+void battle(vector<Warrior>& warriors, int offense, int defense);
 
 int main() {
     ostream& operator<<(ostream& os, const Warrior& warrior){
@@ -89,14 +91,20 @@ void run(stringstream warriorline, vector<Warrior>& warriors){
     else if (command == "Battle"){
         string offensename;
         string defensename;
-        Warrior* offense;
-        Warrior* defense;
+        int offenseindex;
+        int defenseindex;
+        // Warrior* offense;
+        // Warrior* defense;
 
         warriorline >> offensename;
         warriorline >> defensename;
 
-        offense = selectWarrior(warriors, offensename);
+        offenseindex = selectWarrior(warriors, offensename);
+        defenseindex = selectWarrior(warriors, defensename);
+        // offense = &selectWarrior(warriors, offensename);
+        // defense = &selectWarrior(warriors, defensename);
 
+        battle(warriors, offenseindex, defenseindex);
     }
     else{
         cout << "Status:\n";
@@ -111,3 +119,18 @@ void createWarrior(vector<Warrior>& warriors, string name, string weaponname, in
     warriors.push_back(warrior);
 }
 
+int selectWarrior (const vector<Warrior>& warriors, const string& name){
+    for (int i = 0; i < warriors.size(); i++){
+        if (warriors[i].name == name){
+            return i;
+        }
+        else{
+            return 0;
+        }
+    }
+}
+
+void battle(vector<Warrior>& warriors, int offenseindex, int defenseindex){
+    Warrior offense = warriors[offenseindex];
+    if (offense.getStrength == 0 || 
+}
