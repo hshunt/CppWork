@@ -2,135 +2,173 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include <sstream>
 using namespace std;
 
 class Warrior {
     public:
-        string name;
+        Warrior(const string& name, const string& weaponName, int strength) : name(name), weapon(weaponName, strength) {}
 
-        Warrior(string name, string weaponname, int strength);
+       
+        string getName() {
+            return name;
+        };
 
-    string getName (){
-        return name;
-    };
+        string getWeaponName() {
+            string output = weapon.getWeaponName();
+            return output;
+        };
 
-    string getWeaponName (){
-        return weaponname;
-    };
+        int getStrength() {
+            int output = weapon.getWeaponStrength();
+            return output;
+        };
 
-    int getStrength (){
-        return strength;
-    };
+        void adjustStrength(int loserStrength){
+            weapon.adjustWeaponStrength(loserStrength);
+        };
 
-    void adjustStrength (const int loserstrength){
-        strength -= loserstrength;
-    };
-
-    void die (){
-        strength = 0;
-    }
+        void die() {
+            weapon.weaponDie();
+        };
 
     private:
-        string weaponname;
-        int strength;
-        class Weapon{
-            public:
-                Weapon(string weaponname, int strength);
+        class Weapon {
+                public:
+                    Weapon(const string& weaponName, int strength) : weaponName(weaponName), strength(strength) {}
 
-            private:
-        }
+                    string getWeaponName() {
+                        return weaponName;
+                    }
+
+                    int getWeaponStrength() {
+                        return strength;
+                    }
+
+                    void adjustWeaponStrength(int loserStrength) {
+                        strength -= loserStrength;
+                    };
+
+                    void weaponDie() {
+                        strength = 0;
+                    }
+                private:
+                    string weaponName;
+                    int strength;
+            };
+
+        string name;
+        Weapon weapon;    
 };
 
-void run(stringstream warriordoc, vector<Warrior>& warriors);
-void createWarrior(vector<Warrior>&, Warrior warrior);
-// Warrior selectWarrior(vector<Warrior>, string name);
-int selectWarrior(const vector<Warrior>&, const string& name);
-void battle(vector<Warrior>& warriors, int offense, int defense);
+ostream& operator<<(ostream& os, Warrior& warrior);
+void run (ifstream& warriorDoc, vector<Warrior>& warriors);
+void createWarrior (vector<Warrior>& warriors, string name, string weaponName, int strength);
+Warrior& selectWarrior (vector<Warrior>&, const string& name);
+void battle (Warrior& offense, Warrior& defense);
 
 int main() {
-    ostream& operator<<(ostream& os, const Warrior& warrior){
-        os << "Warrior: " << warrior.getName << ", weapon: " << 
-            warrior.getWeaponName << ", " << warrior.getStrength <<
-            endl;
-        return os;
-    };
-
-    ifstream warriordoc("warriors.txt");
+    ifstream warriorDoc ("warriors.txt");
     
-    if (!warriordoc){
+    if (!warriorDoc) {
         cerr << "The file could not be opended!\n";
         exit(1);
     }
 
     vector<Warrior> warriors;
-    stringstream warriorline;
-    while (getline(warriordoc, warriorline)){
-        run(warriorline);
-    }
+    run(warriorDoc, warriors);
     
-    warriordoc.close();
-
+    
+    warriorDoc.close();
 }
 
-void run(stringstream warriorline, vector<Warrior>& warriors){
+ostream& operator<<(ostream& os, Warrior& warrior) {
+    os << "Warrior: " << warrior.getName() << ", weapon: " << 
+        warrior.getWeaponName() << ", " << warrior.getStrength() <<
+        endl;
+    return os;
+};
+
+
+void run (ifstream& warriorLine, vector<Warrior>& warriors) {
     string command;
-    warriorline >> command;
+    while (warriorLine >> command) {
 
-    if (command == "Warrior"){
-        string name;
-        string weaponname;
-        int strength;
+        if (command == "Warrior") {
+            string name, weaponName;
+            int strength;
 
-        warriorline >> name;
-        warriorline >> weaponname;
-        warriorline >> strength;
+            warriorLine >> name >> weaponName >> strength;
 
-        createWarrior(warriors, name, weaponname, strength);
-    }
-    else if (command == "Battle"){
-        string offensename;
-        string defensename;
-        int offenseindex;
-        int defenseindex;
-        // Warrior* offense;
-        // Warrior* defense;
+            createWarrior(warriors, name, weaponName, strength);
+        }
+        else if (command == "Battle") {
+            string offenseName, defenseName; 
 
-        warriorline >> offensename;
-        warriorline >> defensename;
+            warriorLine >> offenseName >> defenseName;
 
-        offenseindex = selectWarrior(warriors, offensename);
-        defenseindex = selectWarrior(warriors, defensename);
-        // offense = &selectWarrior(warriors, offensename);
-        // defense = &selectWarrior(warriors, defensename);
+            Warrior& offense = selectWarrior(warriors, offenseName);
+            Warrior& defense = selectWarrior(warriors, defenseName);
 
-        battle(warriors, offenseindex, defenseindex);
-    }
-    else{
-        cout << "Status:\n";
-        for (const auto& warrior : const auto& warriors){
-            cout << warrior;
+            battle(offense, defense);
+        }
+        else if (command == "Status") {
+            cout << "There are: " << warriors.size() << " warriors\n";
+            for (Warrior& warrior : warriors) {
+                cout << warrior;
+            }
+        }
+        else{
+            cerr << "Run: Run 'command' not recognized" << endl;
+            exit(1);
         }
     }
 }
 
-void createWarrior(vector<Warrior>& warriors, string name, string weaponname, int strength){
-    Warrior warrior(name, weaponname, strength);
+void createWarrior (vector<Warrior>& warriors, string name, string weaponName, int strength) {
+    Warrior warrior(name, weaponName, strength);
     warriors.push_back(warrior);
 }
 
-int selectWarrior (const vector<Warrior>& warriors, const string& name){
-    for (int i = 0; i < warriors.size(); i++){
-        if (warriors[i].name == name){
-            return i;
-        }
-        else{
-            return 0;
+Warrior& selectWarrior (vector<Warrior>& warriors, const string& name) {
+    for (Warrior& warrior : warriors) {
+        if (warrior.getName() == name) {
+            return warrior;
         }
     }
+    cerr << "selectWarrior: Did not recognize warrrior name" << endl;
+    exit(1);
 }
 
-void battle(vector<Warrior>& warriors, int offenseindex, int defenseindex){
-    Warrior offense = warriors[offenseindex];
-    if (offense.getStrength == 0 || 
+void battle (Warrior& offense, Warrior& defense) {
+    cout << offense.getName() << " battles " << defense.getName()
+        << endl;
+    if (offense.getStrength() == 0 || defense.getStrength() == 0) {
+        if (offense.getStrength() == 0 && defense.getStrength() == 0) {
+            cout << "Oh, NO! They're both dead! Yuck!\n";
+        }
+        else if (offense.getStrength() == 0) {
+            cout << "He's dead, " << defense.getName() << endl;
+        }
+        else {
+            cout << "He's dead, " << offense.getName() << endl;
+        }
+    }
+    else {
+        if (offense.getStrength() == defense.getStrength()) {
+            cout << "Mutual Annihilation: " << offense.getName() << " and "
+                << defense.getName() << " die at each other's hands\n";
+            offense.die();
+            defense.die();
+        }
+        else if (offense.getStrength() > defense.getStrength()) {
+            cout << offense.getName() << " defeats " << defense.getName() << endl;
+            offense.adjustStrength(defense.getStrength());
+            defense.die();
+        }
+        else {
+            cout << defense.getName() << " defeats " << offense.getName() << endl;
+            defense.adjustStrength(offense.getStrength());
+            offense.die();
+        }
+    }
 }
