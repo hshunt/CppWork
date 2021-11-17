@@ -8,25 +8,25 @@ class Warrior {
     public:
         Warrior(const string& name, const string& weaponName, int strength) : name(name), weapon(weaponName, strength) {}
 
-       
+       // returns name of warrior
         string getName() {
             return name;
         };
-
+        // get name from weapon and returns
         string getWeaponName() {
             string output = weapon.getWeaponName();
             return output;
         };
-
+        // gets strength from weapon and returns
         int getStrength() {
             int output = weapon.getWeaponStrength();
             return output;
         };
-
+        // adjust strength of winning side
         void adjustStrength(int loserStrength){
             weapon.adjustWeaponStrength(loserStrength);
         };
-
+        // sets strength of losing side to 0
         void die() {
             weapon.weaponDie();
         };
@@ -35,19 +35,19 @@ class Warrior {
         class Weapon {
                 public:
                     Weapon(const string& weaponName, int strength) : weaponName(weaponName), strength(strength) {}
-
+                    // used for getting weapon name public
                     string getWeaponName() {
                         return weaponName;
                     }
-
+                    // used for getting weapon strength public
                     int getWeaponStrength() {
                         return strength;
                     }
-
+                    // adjust strength of winning side
                     void adjustWeaponStrength(int loserStrength) {
                         strength -= loserStrength;
                     };
-
+                    // losing side strength set to 0
                     void weaponDie() {
                         strength = 0;
                     }
@@ -81,6 +81,7 @@ int main() {
     warriorDoc.close();
 }
 
+// formats output for for class Warrior
 ostream& operator<<(ostream& os, Warrior& warrior) {
     os << "Warrior: " << warrior.getName() << ", weapon: " << 
         warrior.getWeaponName() << ", " << warrior.getStrength() <<
@@ -88,7 +89,8 @@ ostream& operator<<(ostream& os, Warrior& warrior) {
     return os;
 };
 
-
+// cycles through line of warriordoc
+// check for command type, then breaks up line accordingly
 void run (ifstream& warriorLine, vector<Warrior>& warriors) {
     string command;
     while (warriorLine >> command) {
@@ -124,11 +126,13 @@ void run (ifstream& warriorLine, vector<Warrior>& warriors) {
     }
 }
 
+// takes attributes for Warrior class, creates object, adds to vector of warriors
 void createWarrior (vector<Warrior>& warriors, string name, string weaponName, int strength) {
     Warrior warrior(name, weaponName, strength);
     warriors.push_back(warrior);
 }
 
+// takes string and find warrior with corresponding name and returns warrior
 Warrior& selectWarrior (vector<Warrior>& warriors, const string& name) {
     for (Warrior& warrior : warriors) {
         if (warrior.getName() == name) {
@@ -139,6 +143,12 @@ Warrior& selectWarrior (vector<Warrior>& warriors, const string& name) {
     exit(1);
 }
 
+// checks if either warrior has strength 0(dead)
+// if one is dead, checks if one or both is dead
+// if neither is dead the warriors battle(compare strength)
+// if strengths are equal both warriors die(stregnth set to 0)
+// if one warrior has greater strength, lesser warrior's strength substract from greater warrior's strength
+// lesser warrior's strength is set to 0
 void battle (Warrior& offense, Warrior& defense) {
     cout << offense.getName() << " battles " << defense.getName()
         << endl;
