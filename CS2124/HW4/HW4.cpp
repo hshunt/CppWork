@@ -6,7 +6,7 @@ using namespace std;
 
 class Warrior {
     public:
-        Warrior(const string& name, int strength) : name(name), strength(strength) {}
+        Warrior(const string& name, float strength) : name(name), strength(strength) {}
     
        const string getName () {
            return name;
@@ -16,13 +16,17 @@ class Warrior {
             return strength;
         };
 
+        void adjustStrength (float strengthRatio) {
+            strength /= strengthRatio;
+        };
+
         void die () {
             strength = 0;
         };
 
     private:
-        string name;
-        int strength;
+        const string name;
+        float strength;
 };
 
 class Noble {
@@ -36,13 +40,16 @@ class Noble {
 
         int getStrength () {
             for (Warrior*& warrior : warriors) { 
-                strength += &warrior->getStrength;
+                strength += warrior->getStrength();
                 return strength;
             }
         };
 
-        void adjustStrength () {
-
+        void adjustStrength (Noble& defender) {
+            float strengthRatio = defender.getStrength()/getStrength();
+            for (Warrior*& warrior : warriors){
+                warrior->adjustStrength(strengthRatio);
+            }
         };
 
         void die () {
@@ -58,10 +65,12 @@ class Noble {
                 if (getStrength() > 0 && defender.getStrength() > 0){
                     if (getStrength() == defender.getStrength()) {
                         die();
+                        //need to be able to pass self to defender
+                        //use this?
                         defender.die();
                     }
                     else if (getStrength() > defender.getStrength()) {
-                        adjustStrength();
+                        adjustStrength(defender);
                         defender.die();
                     }
                     else {
@@ -93,7 +102,7 @@ class Noble {
         void fireWarrior (const string& warriorName, vector<Warrior*>& warriors ) {
             int iend = warriors.size()-1;
             for (int i = 0; i < warriors.size(); i++){
-                if (warriors[iend]->getName == warriorName){
+                if (warriors[iend]->getName() == warriorName){
                     warriors.pop_back();
                     cout << "popped " << warriorName << endl;
                     break;
@@ -118,8 +127,8 @@ class Noble {
         };
 
     private:
-        int strength;
-        string name;
+        float strength;
+        const string name;
         vector<Warrior*> warriors;
 };
 
