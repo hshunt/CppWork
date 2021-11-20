@@ -90,19 +90,31 @@ class Noble {
             
         };
 
-        void fireWarrior (const string& warriorName) {
-            vector<Warrior*> warriorsTemp;
-
-            for (Warrior*& warrior : warriors) {
-                warriors.pop_back();
-                warriorsTemp.push_back(warrior);
-                if (&warrior->getName == warriorName) {
-                    warriorsTemp.pop_back();
+        void fireWarrior (const string& warriorName, vector<Warrior*>& warriors ) {
+            int iend = warriors.size()-1;
+            for (int i = 0; i < warriors.size(); i++){
+                if (warriors[iend]->getName == warriorName){
+                    warriors.pop_back();
+                    cout << "popped " << warriorName << endl;
+                    break;
                 }
-            for (Warrior*& warrior : warriorsTemp) {
-                warriors.push_back(warrior);
+                Warrior* hold = warriors[i];
+                warriors[i] = warriors[iend];
+                warriors[iend] = hold;
             }
-            }
+
+            // vector<Warrior*> warriorsTemp;
+
+            // for (Warrior*& warrior : warriors) {
+            //     warriors.pop_back();
+            //     warriorsTemp.push_back(warrior);
+            //     if (&warrior->getName == warriorName) {
+            //         warriorsTemp.pop_back();
+            //     }
+            // for (Warrior*& warrior : warriorsTemp) {
+            //     warriors.push_back(warrior);
+            // }
+            // }
         };
 
     private:
