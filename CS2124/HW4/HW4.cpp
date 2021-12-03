@@ -5,6 +5,10 @@
 using namespace std;
 
 class Warrior {
+    friend ostream& operator<<(ostream& os, Warrior& warrior) {
+        cout << "   " << warrior.getName() << ": " << warrior.getStrength() << endl;
+    };
+
     public:
         Warrior(const string& name, float strength) : name(name), strength(strength) {}
     
@@ -30,6 +34,14 @@ class Warrior {
 };
 
 class Noble {
+    friend ostream& operator<<(ostream& os, Noble& noble) {
+        cout << noble.getName() << " has and army of " <<
+            noble.getArmySize() << endl;
+        for (Warrior*& warrior : noble.getWarriors()) {
+            cout << warrior;
+        };
+    };
+
     public:
         Noble(const string& name) : name(name) {}
 
@@ -38,11 +50,23 @@ class Noble {
             warriors.push_back(warriorPtr);
         };
 
+        string getName () {
+            return name;
+        };
+
         int getStrength () {
             for (Warrior*& warrior : warriors) { 
                 strength += warrior->getStrength();
                 return strength;
             }
+        };
+
+        vector<Warrior*> getWarriors () {
+            return warriors;
+        };
+
+        int getArmySize () {
+            return warriors.size() - 1;
         };
 
         void adjustStrength (Noble& defender) {
@@ -54,10 +78,6 @@ class Noble {
 
         void die () {
             for (Warrior*& warrior : warriors) { warrior->die(); }
-        };
-
-        vector<Warrior*> getWarriors () {
-            return warriors;
         };
 
         void battle (Noble& defender) {
@@ -74,7 +94,7 @@ class Noble {
                         defender.die();
                     }
                     else {
-                        defender.adjustStrength();
+                        defender.adjustStrength(*this);
                         die();
                     }
                 }
@@ -104,26 +124,12 @@ class Noble {
             for (int i = 0; i < warriors.size(); i++){
                 if (warriors[iend]->getName() == warriorName){
                     warriors.pop_back();
-                    cout << "popped " << warriorName << endl;
                     break;
                 }
                 Warrior* hold = warriors[i];
                 warriors[i] = warriors[iend];
                 warriors[iend] = hold;
             }
-
-            // vector<Warrior*> warriorsTemp;
-
-            // for (Warrior*& warrior : warriors) {
-            //     warriors.pop_back();
-            //     warriorsTemp.push_back(warrior);
-            //     if (&warrior->getName == warriorName) {
-            //         warriorsTemp.pop_back();
-            //     }
-            // for (Warrior*& warrior : warriorsTemp) {
-            //     warriors.push_back(warrior);
-            // }
-            // }
         };
 
     private:
