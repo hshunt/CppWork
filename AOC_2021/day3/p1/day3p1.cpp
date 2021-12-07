@@ -15,10 +15,14 @@ class BinaryDiagnostic {
             }
         }
 
+        // interates through each line of binary and each character in line
+        // looks for frequency of 1/0 in each character position
+        // adds character onto dedcodedGammaStr
         void gammaRateDecode() {
-            string preConversionDecoded;
             int i = 0;
-            while(i < 5){
+            int len  = binary[0].length();
+
+            while (i < len){
                 int oneFreq = 0;
                 int zeroFreq = 0;
                 for (string& binaryLine : binary) {
@@ -45,9 +49,10 @@ class BinaryDiagnostic {
         }
 
         void epsilonRateDecode() {
-            string preConversionDecoded;
             int i = 0;
-            while(i < 5){
+            int len  = binary[0].length();
+
+            while (i < len){
                 int oneFreq = 0;
                 int zeroFreq = 0;
                 for (string& binaryLine : binary) {
@@ -92,13 +97,17 @@ class BinaryDiagnostic {
         vector<string> binary;
         string decodedGammaStr, decodedEpsilonStr;
 
+        // converts binary string to decimal int
+        // 
         int binaryToDecimal(string& binary) {
             int decimalValue = 0, base = 1;
-            int len = binary.length();
+            int len = binary.length() -1 ;
 
             for (int i = len; i >= 0; i--) {
+                cout << "For num: " << binary[i] << "\n";
                 if (binary[i] == '1') {
-                    decimalValue += base;
+                    cout << "Added " << base << " to decimal value\n";
+                    decimalValue += base; 
                 }
                 base = base * 2;
             }

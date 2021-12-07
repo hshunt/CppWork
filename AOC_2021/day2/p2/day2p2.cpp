@@ -67,10 +67,12 @@ void run(ifstream& input) {
             cout << command << " " << adjust << endl;
         }
         else {
-            cerr << "Run Error: Command not recognized" << endl;
+            cerr << "Run Error: Command not recognized" << 
+                endl;
             exit(1);
         }
     }
     
-    cout << "The final position of the sub is: " << sub.position() << endl;
+    cout << "The final position of the sub is: " << 
+        sub.position() << endl;
 }
