@@ -51,7 +51,7 @@ class BinaryDiagnostic {
         vector<pair<string, bool>> binary;
         string oxygenGeneratorRating, co2ScrubberRating;
 
-        string decodeOxy(int charPos, bool repeat) {
+        string decodeOxy(int& charPos, bool& repeat) {
             while (repeat == true) {
                 int oneFreq = 0, zeroFreq = 0;
                 int numOfTrue = 0;
@@ -108,10 +108,12 @@ class BinaryDiagnostic {
                 }
             }
 
+            charPos = 0;
+            repeat = true;
             return output;
         }
 
-        string decodeCO2(int charPos, bool repeat) {
+        string decodeCO2(int& charPos, bool& repeat) {
             while (repeat == true) {
                 int oneFreq = 0, zeroFreq = 0;
                 int numOfTrue = 0;
